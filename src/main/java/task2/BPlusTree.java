@@ -14,7 +14,7 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
         EXCLUSIVE, INCLUSIVE
     }
 
-    private static final int DEFAULT_BRANCHING_FACTOR = 128;
+    private static final int DEFAULT_BRANCHING_FACTOR = 7;
 
 
     private int branchingFactor;
@@ -55,36 +55,6 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
         root.deleteValue(key);
     }
 
-    public String toString() {
-        Queue<List<Node>> queue = new LinkedList<List<Node>>();
-        queue.add(Arrays.asList(root));
-        StringBuilder sb = new StringBuilder();
-        while (!queue.isEmpty()) {
-            Queue<List<Node>> nextQueue = new LinkedList<List<Node>>();
-            while (!queue.isEmpty()) {
-                List<Node> nodes = queue.remove();
-                sb.append('{');
-                Iterator<Node> it = nodes.iterator();
-                while (it.hasNext()) {
-                    Node node = it.next();
-                    sb.append(node.toString());
-                    if (it.hasNext())
-                        sb.append(", ");
-                    if (node instanceof BPlusTree.InternalNode)
-                        nextQueue.add(((InternalNode) node).children);
-                }
-                sb.append('}');
-                if (!queue.isEmpty())
-                    sb.append(", ");
-                else
-                    sb.append('\n');
-            }
-            queue = nextQueue;
-        }
-
-        return sb.toString();
-    }
-
     private abstract class Node {
         List<K> keys;
 
@@ -111,9 +81,6 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
 
         abstract boolean isUnderflow();
 
-        public String toString() {
-            return keys.toString();
-        }
     }
 
     private class InternalNode extends Node {
@@ -228,12 +195,8 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
         void insertChild(K key, Node child) {
             int loc = Collections.binarySearch(keys, key);
             int childIndex = loc >= 0 ? loc + 1 : -loc - 1;
-            if (loc >= 0) {
-                children.set(childIndex, child);
-            } else {
-                keys.add(childIndex, key);
-                children.add(childIndex + 1, child);
-            }
+            keys.add(childIndex, key);
+            children.add(childIndex + 1, child);
         }
 
         Node getChildLeftSibling(K key) {
@@ -331,7 +294,6 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
 
         @Override
         void merge(Node sibling) {
-            @SuppressWarnings("unchecked")
             LeafNode node = (LeafNode) sibling;
             keys.addAll(node.keys);
             values.addAll(node.values);
