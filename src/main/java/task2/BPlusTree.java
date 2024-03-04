@@ -14,17 +14,11 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
         EXCLUSIVE, INCLUSIVE
     }
 
-    private static final int DEFAULT_BRANCHING_FACTOR = 128;
-
 
     private int branchingFactor;
 
 
     private Node root;
-
-    public BPlusTree() {
-        this(DEFAULT_BRANCHING_FACTOR);
-    }
 
     public BPlusTree(int branchingFactor) {
         if (branchingFactor <= 2)
@@ -81,9 +75,6 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
 
         abstract boolean isUnderflow();
 
-        public String toString() {
-            return keys.toString();
-        }
     }
 
     private class InternalNode extends Node {

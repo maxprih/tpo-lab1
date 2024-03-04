@@ -8,7 +8,7 @@ class BPlusTreeTest {
 
     @Test
     public void test() {
-        BPlusTree<Integer, String> bpt = new BPlusTree<Integer, String>(4);
+        BPlusTree<Integer, String> bpt = new BPlusTree<Integer, String>(7);
         bpt.insert(0, "a");
         bpt.insert(1, "b");
         bpt.insert(2, "c");
@@ -37,8 +37,28 @@ class BPlusTreeTest {
     }
 
     @Test
+    public void testOverflow() {
+        BPlusTree<Integer, String> bpt = new BPlusTree<Integer, String>(7);
+        bpt.insert(0, "a");
+        bpt.insert(1, "b");
+        bpt.insert(2, "c");
+        bpt.insert(3, "d");
+        bpt.insert(4, "e");
+        bpt.insert(5, "f");
+        bpt.insert(6, "g");
+        bpt.insert(7, "h");
+        bpt.insert(8, "i");
+        bpt.insert(9, "j");
+        assertEquals(bpt.search(0), "a");
+        assertEquals(bpt.search(2), "c");
+        assertEquals(bpt.search(4), "e");
+        assertEquals(bpt.search(6), "g");
+        assertEquals(bpt.search(8), "i");
+    }
+
+    @Test
     public void testSearchRange() {
-        BPlusTree<Integer, String> bpt = new BPlusTree<Integer, String>(4);
+        BPlusTree<Integer, String> bpt = new BPlusTree<Integer, String>(7);
         bpt.insert(0, "a");
         bpt.insert(1, "b");
         bpt.insert(2, "c");
@@ -67,7 +87,8 @@ class BPlusTreeTest {
                         "e", "f", "g", "h" });
     }
 
-
-
-
+    @Test
+    public void testErrorBranchingFactor() {
+        assertThrows(IllegalArgumentException.class, () -> {BPlusTree<Integer, String> bPlusTree = new BPlusTree<>(1);});
+    }
 }
