@@ -55,36 +55,6 @@ public class BPlusTree<K extends Comparable<? super K>, V> {
         root.deleteValue(key);
     }
 
-    public String toString() {
-        Queue<List<Node>> queue = new LinkedList<List<Node>>();
-        queue.add(Arrays.asList(root));
-        StringBuilder sb = new StringBuilder();
-        while (!queue.isEmpty()) {
-            Queue<List<Node>> nextQueue = new LinkedList<List<Node>>();
-            while (!queue.isEmpty()) {
-                List<Node> nodes = queue.remove();
-                sb.append('{');
-                Iterator<Node> it = nodes.iterator();
-                while (it.hasNext()) {
-                    Node node = it.next();
-                    sb.append(node.toString());
-                    if (it.hasNext())
-                        sb.append(", ");
-                    if (node instanceof BPlusTree.InternalNode)
-                        nextQueue.add(((InternalNode) node).children);
-                }
-                sb.append('}');
-                if (!queue.isEmpty())
-                    sb.append(", ");
-                else
-                    sb.append('\n');
-            }
-            queue = nextQueue;
-        }
-
-        return sb.toString();
-    }
-
     private abstract class Node {
         List<K> keys;
 
